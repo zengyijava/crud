@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mybatis.mapper.PositionMapper">
+
+    <select id="queryPositionPages" resultType="com.example.demo.mybatis.entity.PositionVo"
+            parameterType="com.example.demo.mybatis.entity.PositionDto">
+        select p.pid,p.userId,p.position,p.createTime,u.username,u.phone from tb_position p
+        inner join tb_user u on p.userId=u.id
+        <where>
+            <if test="dto.username!=null and dto.username!='' ">
+                AND u.username=#{dto.username}
+            </if>
+            <if test="dto.position!=null and dto.position!='' ">
+                AND p.position  LIKE  CONCAT(CONCAT('%',#{dto.position}),'%')
+            </if>
+        </where>
+        ORDER BY p.pid ASC
+
+    </select>
+
+    <select id="simplePage" resultType="com.example.demo.mybatis.entity.PositionVo">
+        select p.pid,p.userId,p.position,p.createTime,u.username,u.phone from tb_position p
+        inner join tb_user u on p.userId=u.id
+        <where>
+            <if test="dto.username!=null and dto.username!='' ">
+                AND u.username LIKE concat('%',#{dto.username},'%')
+            </if>
+            <if test="dto.position!=null and dto.position!='' ">
+                AND p.position  LIKE  CONCAT(CONCAT('%',#{dto.position}),'%')
+            </if>
+        </where>
+        ORDER BY p.pid ASC
+            <if test="page !=null and size!=null">
+                limit #{page},#{size}
+            </if>
+    </select>
+
+</mapper>
